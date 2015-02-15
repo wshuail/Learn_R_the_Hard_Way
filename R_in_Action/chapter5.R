@@ -248,7 +248,7 @@ cat('HELLO', x, '\n') #error
 names <- 'Bob'
 cat('Hello', names, '\b.\n', 'Isn\'t R', '\t', 'GREAT?\n')
 
-
+test word
 
 
 
