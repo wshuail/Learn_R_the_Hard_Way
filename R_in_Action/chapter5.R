@@ -250,6 +250,91 @@ cat('Hello', names, '\b.\n', 'Isn\'t R', '\t', 'GREAT?\n')
 
 test word
 
+#appling functions to matrices and frames
+
+a <- 2
+sqrt(a)
+
+b <- c(1.243, 5.654, 2.990)
+round(b)
+
+c <- matrix(runif(12), nrow=3)
+c
+
+mean(c)
+
+# apply function
+#apply(x, MARGIN, FUN, ...)
+# MARGIN=1 means row, MARGIN=2 means column.
+
+mydata <- matrix(rnorm(30), nrow=6)
+mydata
+
+apply(mydata, 1, mean)
+apply(mydata, 2, mean, trim=0.2)
+apply(mydata, 1, median)
+apply(mydata, 2, median)
+
+
+#a solution for our data management challenge
+
+options(digits = 2)
+Student <- c('John Davis', 'Angela Williams', 
+             'Bullwinkle Moose', 'David Jones', 
+             'Hanice Markhammer', 'Cheryl Cushing', 
+             'Reuven Ytzrhak', 'Greg Knox', 
+             'Joel England', 'Mary Rayburn')
+Math <- c(502, 600, 412, 358, 495, 512, 410, 625, 573, 522)
+Science <- c(95, 99, 80, 82, 75, 85, 80, 95, 89, 86)
+English <- c(25, 22, 18, 15, 20, 28, 15, 30, 27, 18)
+roster <- data.frame(Student, Math, Science, English,
+                     stringAsFactors=FALSE)
+z <- scale(roster[, 2:4])
+score <- apply(z, 1, mean)
+roster <- cbind(roster, score)
+y <- quantile(score, c(.8, .6, .4, .2))
+roster$grade[score >= y[1]] <- 'A'
+roster$grade[score <y[1] &
+                     score >= y[2]] <- 'B'
+roster$grade[score < y[2] &
+                     score >= y[3]] <- 'C'
+roster$grade[score < y[3] &
+                     score >= y[4]] <- 'D'
+roster$grade[score < y[4]] <- 'E'
+
+names <- strisplit((roster$Students), '')
+lastname <- sapply(name, '[', 2)
+firstname <- sapply(name, '[', 1)
+roster <- cbind(firstname, lastname, roster[ ,-1])
+roster <- roster[order(lastname, firstname), ]
+roster
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
