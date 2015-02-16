@@ -287,6 +287,24 @@ Student <- c('John Davis', 'Angela Williams',
 Math <- c(502, 600, 412, 358, 495, 512, 410, 625, 573, 522)
 Science <- c(95, 99, 80, 82, 75, 85, 80, 95, 89, 86)
 English <- c(25, 22, 18, 15, 20, 28, 15, 30, 27, 18)
+roster <- data.frame(Student, Math, Science, English)
+score <- apply(roster[2:4], 1, mean)
+roster <- cbind(roster, score)
+
+y <- quantile(roster$score, c(0.8, 0.6, 0.4, 0.2))
+roster$grade[score > y[1]] <- 'A'
+roster$grade[score >= y[2] & score < y[1]] <- 'B'
+roster$grade[score >= y[3] & score < y[2]] <- 'C'
+roster$grade[score >= y[4] & score < y[3]] <- 'D'
+roster$grade[score < y[4]] <- 'E'
+
+names <- strsplit(Student, ' ')
+Firstname <- sapply(names, '[', 1)
+Lastname <- sapply(names, '[', 2)
+
+roster <- cbind(Firstname, Lastname, roster[ ,-1])
+roster[order(Lastname), ]
+
 roster <- data.frame(Student, Math, Science, English,
                      stringAsFactors=FALSE)
 z <- scale(roster[, 2:4])
@@ -308,6 +326,142 @@ firstname <- sapply(name, '[', 1)
 roster <- cbind(firstname, lastname, roster[ ,-1])
 roster <- roster[order(lastname, firstname), ]
 roster
+
+# 5.4 control flow
+# 5.4.1 repetition and looping
+# for (var in seq) statement
+# seq is a sequence of numbers or character string
+# statement is a single R statement or a compound statement ( a group 
+# of R statements enclosed in curly brances{} and separated by semicolons)
+for (i in 1:10) print ('Hello')
+
+# while (cond) statement
+# cond is an expression that resolves of true or false
+i <- 10
+while (i > 0)  {print ('Hello'); i <- i -1}
+
+# apply functions are better.
+
+# 5.4.2 conditional execusion
+
+# IF-ELSE
+# if (cond) statement
+# if (cond) statement else statement2
+
+if (is.character(grade)) grade <- as.factor(grade)
+if (!is.character(grade)) grade <- as.factor(grade) 
+else print ('Grade is already is a factor')
+
+#IFELSE
+# iselse( cond, statement, statement2)
+
+ifelse (score > 0.5, print ('Passed'), print('Failed'))
+outcone <- ifelse (score > 0.5, 'Passed', 'Failed')
+
+# SWITCH
+# switch (expr, ...)
+
+feelings <- c('sad', 'afraid')
+for (i in feelings)
+        print (switch(i, 
+                      happy = 'I am glade you are happy',
+                      afraid = 'There is nothing to fear',
+                      sad = 'Cheey up',
+                      angry = 'Calm down now'
+                      )
+               )
+
+# User-writtern functions
+
+# myfunctions <- functions(arg1, arg2, ...){
+# statements
+# return(object)
+}
+
+mystats <- function(x, parametric=TRUE, print=FALSE){
+        if(parametric){
+                center <- mean(x); spread <- sd(x)
+        }
+        else{
+                center <- median(x); spread <- mad(x)
+        }
+        if (print & parametric){
+                cat('Mean=', center, '\n', 'SD=', spread, '\n')
+        }
+        else if (print & !parametric){
+                cat('Median=', center, '\n', 'MAD=', spread, '\n')
+        }
+        result <- list(center=center, spread=spread)
+        return (result)
+}
+        
+set.seed(1234)
+x <- rnorm(500)
+y <- mystats(x, parametric=TRUE, print=FALSE)
+
+
+mydate <- function (type = 'long'){
+        switch(type,
+               long = format(Sys.time(), '%A %B %d %Y'),
+               short = format(Sys.time(), '%m-%d-%y'),
+               cat(type, 'is not a recognized type\n')
+        )
+}
+
+mydate('long')
+mydate('short')
+mydate()
+mydate('medium')
+
+
+# I will define of function my myselves.
+exfunction <- function(x){
+        if (x>0){
+                print ('This is a positive num')
+                }
+        else{
+                print ('This is a negative num')
+        }
+}
+exfunction(5)
+# Wow, seems successful.
+
+# 5.6 Aggragation and restructuring
+# 5.6.1 Transpose
+cars <- mtcars[1:5, 1:4]
+cars
+t(cars)
+
+# aggregating data
+# aggregate(x, by, FUN)
+
+options(digits=3)
+attach(mtcars)
+aggdata <- aggregate(mtcars, by = list(cyl, gear), 
+                     FUN=mean, na.rm=TRUE)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
