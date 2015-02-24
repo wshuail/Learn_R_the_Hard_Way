@@ -321,5 +321,51 @@ head(life3)
 life4 <- subset(LifeCycleSavings, select = -c(2, 3))
 head(life4)
 
+#  chapter 7 character manipulation
+
+
+## nchar()
+state.name
+nchar(state.name)
+length(state.name)
+
+## cat
+x =7
+y =10
+cat('x should be larger than y, but x =',
+    x, 'and y =', y, '\n')
+
+cat('long string can', 'be displayed over',
+    'several lines using', 'the fill = argument',
+    fill = 40)
+
+## paste
+
+paste(1, 'two', 3, 'four', 5)
+paste(c(1, 'two', 3, 'four', 5), collapse = ' ')
+
+paste(1:3, 'X', sep = '')
+paste(c('X', 'Y'), 1:5, sep = '')
+paste(c('X', 'Y'), 1:5, collapse = '')
+
+paste(c('X', 'Y'), 1:5, sep = '_', collapse = '|')
+
+paste(c('X', 'Y'), 1:5, '^', c('a', 'b'), 
+      sep = '_', collapse = '|')
+
+paste(c('X', 'Y'), 1:5, '^', c('a', 'b'), sep = '_')
+
+## substring
+
+substring(state.name, 2, 6)
+
+
+
+
+
+
+
+
+
 
 
