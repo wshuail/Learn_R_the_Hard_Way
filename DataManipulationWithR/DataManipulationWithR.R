@@ -359,6 +359,119 @@ paste(c('X', 'Y'), 1:5, '^', c('a', 'b'), sep = '_')
 
 substring(state.name, 2, 6)
 
+mystring <- 'dog cat duck'
+substring(mystring, c(1, 5, 9), c(3, 7, 12))
+mystring2 <- 'hello world'
+substring(mystring2, c(1, 6), c(5, 11))
+
+state <- 'Mississippi'
+ll <- nchar(state)
+ltrs <- substring(state, 1:ll, 1:ll)
+ltrs
+which(ltrs == 's')
+
+mystring <- 'dog cat duck'
+substring(mystring, 5, 7) <- 'feline'
+mystring
+
+mystring <- 'dog cat duck'
+substring(mystring, 5, 7) <- 'a'
+mystring
+
+# 7.4 Regular expression in R
+
+expr <- '.*\\.txt'
+nchar(expr)
+cat(expr, '\n')
+expr <- readline()
+
+# . ^ $ + ? * ( ) [ ] { } | \
+
+# [0-9][0-9][a-zA-Z]+
+# (abc){3}
+# ^[a-zA-z]+\\.jpg$
+
+string <- c('chidren', 'dog', 'cat')
+expr <- paste(string, collapse = '|')
+expr
+
+# 7.6 breaking apart character values
+
+sentence <- 'R is a free software environment for statistocal computing'
+parts <- strsplit(sentence, ' ')
+parts
+length(parts)
+length(parts[[1]])
+
+more <- c('R is a free software environment for statistocal 
+              computing', 'It compiles and runs on a wide variaty
+              of UNIX plantforms')
+parts <- strsplit(more, ' +')
+sapply(parts, length)
+
+allparts <- unlist(parts)
+allparts
+
+str <- 'one two three four'
+strsplit(str, ' ')
+
+str <- c('one two', 'three four')
+strsplit(str, '')
+
+# 7.7 using regular expression in R
+
+grep('^pop', names(LifeCycleSavings))
+grep('^pop', names(LifeCycleSavings), value = TRUE)
+head(LifeCycleSavings[, grep('^pop', names(LifeCycleSavings))])
+
+inp <- c('run dog run', 'work doggedly', 'CAT AND DOG')
+grep('\\<dog\\>', inp, ignore.case = TRUE)
+
+# use any()
+
+str1 <- c('The R Foundation', 'is a nor for profit organization',
+          'work in the public interest')
+str2 <- c('It was founded by the members', 'of the R core team in
+          order to', 'provide support for the R project')
+any(grep('profit', str1))
+any(grep('thre', str1))
+any(grep('profit', str2))
+
+# regexpr()
+
+tst <- c('one x7 two b1', 'three c5 four b9',
+         'five six seven', 'a8 eight nine')
+wh <- regexpr('[a-z][0-9]', tst)
+wh
+res <- substring(tst, wh, wh + attr(wh, 'match.length') - 1)
+res
+res[res != '']
+
+#gregexpr
+
+tst <- c('one x7 two b1', 'three c5 four b9',
+         'five six seven', 'a8 eight nine')
+wh2 <- gregexpr('[a-z][0-9]', tst)
+wh2
+res2 <- list()
+for (i in 1:length(wh2)){
+     res2[[i]] <- substring(tst[i], wh2[[i]],
+                            wh2[[i]] + attr(wh2[[2]],
+                                            'match.length') - 1)
+}
+res2
+
+getexpr <- function(str, grep)substring(str, grep, 
+                                        grep + attr(grep, 'match.length') - 1)
+res3 <- mapply(getexpr, tst, wh)
+res3
+
+# 7.8 substitutions and tagging
+
+value <- c('$11,317.35', '$11,234.51', '$11,275.89')
+as.numeric(gsub('[$,]', '', value))
+
+
 
 
 
