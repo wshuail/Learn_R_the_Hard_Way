@@ -8,9 +8,12 @@
 
 library(vcd)
 
+Arthritis
+class(Arthritis)
 
 counts <- table(Arthritis$Improved)
 counts
+class(counts)
 
 opar <- par(pin=c(3, 2), mai=c(1, 1, 1, 1))
 barplot(counts,
@@ -31,7 +34,10 @@ plot(Arthritis$Improved, main = 'Horizental Bar Plot',
      horiz = TRUE)
 
 attach(mtcars)
+head(mtcars)
 cardata <- mtcars[1:5, 1]
+cardata
+class(cardata)
 
 barplot(cardata, main='Simple bar plot',
         xlab='Type of cars', ylab='mpg')
@@ -43,9 +49,11 @@ plot(cardata, main='Simple bar plot',
         xlab='Type of cars', ylab='mpg')
 
 cardata2 <- mtcars[1:5, 1:4]
+cardata2
+class(cardata2)
 barplot(cardata2$mpg, main='Simple bar plot',
         xlab='Type of cars', ylab='mpg')
-
+class(cardata2$mpg)
 plot(cardata2$mpg, main='Simple bar plot',
         xlab='Type of cars', ylab='mpg')
 # This is not a bar plot. Maybe the variable is not a factor.
