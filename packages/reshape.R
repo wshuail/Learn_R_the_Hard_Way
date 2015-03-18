@@ -23,9 +23,18 @@ tail(airmelt)
 # ID variables are the variables that identify individual rows 
 # of data.
 
-airmetl <- melt(airquality, id=c("month", "day"))
-airmetl
+airmetl <- melt(airquality, id.vars=c("month", "day"))
+head(airmetl)
 
+# What if we wanted to control the column names in our 
+# long-format data? melt lets us set those too all in one step:
+
+airmetl.withname <- melt(airquality, id.vars=c("month", "day"),
+                         variable.name = 'climate_variable',
+                         value.name = 'climate_variable')
+head(airmetl.withname)
+
+# if we only want to know the value of wind and temp.
 airmetl2 <- melt(airquality, id=c("month", "day"),
                  measure = 'wind', 'temp')
 airmetl2
@@ -97,6 +106,31 @@ library(plyr) # needed to access . function
 acast(aqm, variable ~ month, mean, 
       subset = .(variable == "ozone"))
 acast(aqm, variable ~ month, mean, subset = .(month == 5))
+
+# to data.frame, use dcast
+# The arguments on the left refer to the ID variables and the 
+# arguments on the right refer to the measured variables. 
+
+metlair <- melt(airquality, id.vars = c('month', 'day'))
+head(metlair)
+metlair.dcast <- dcast(metlair, month + day ~ variable)
+head(metlair.dcast)
+
+metlair.dcast.2 <- dcast(metlair, month + day ~ variable,
+                         value.var = 'value')
+head(metlair.dcast.2)
+
+# a mistake example
+dcast(metlair, month ~ variable)
+
+# tell dcast how to deal with the data
+dcast(metlair, month ~ variable,
+      fun.aggregate = mean,
+      na.rm = T)
+
+
+
+# Warning: Aggregation function missing: defaulting to length
 
 #Chick weight example
 names(ChickWeight) <- tolower(names(ChickWeight))
