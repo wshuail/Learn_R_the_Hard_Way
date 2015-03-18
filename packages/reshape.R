@@ -11,6 +11,18 @@ require(reshape2)
 
 names(airquality) <- tolower(names(airquality))
 head(airquality)
+# By default, melt has assumed that all columns with numeric 
+# values are variables with values.
+airmelt <- melt(airquality)
+head(airmelt)
+tail(airmelt)
+
+# Maybe here we want to know the values of ozone, solar.r, wind, 
+# and temp for each month and day. We can do that with melt by 
+# telling it that we want month and day to be "ID variables". 
+# ID variables are the variables that identify individual rows 
+# of data.
+
 airmetl <- melt(airquality, id=c("month", "day"))
 airmetl
 
