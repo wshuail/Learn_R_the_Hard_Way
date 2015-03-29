@@ -439,6 +439,49 @@ options(digits=3)
 attach(mtcars)
 aggdata <- aggregate(mtcars, by = list(cyl, gear), 
                      FUN=mean, na.rm=TRUE)
+<<<<<<< HEAD
+aggdata
+
+aggdata_2 <- aggregate(mtcars, 
+                       by = list(Group.cyl = cyl, 
+                                 Group.cyl = gear),
+                       FUN=mean, na.rm=TRUE)
+aggdata_2
+
+# 5.6.3 The Reshape package
+
+require(reshape)
+
+ID <- c(1, 1, 2, 2)
+Time <- c(1, 2, 1, 2)
+X1 <- c(5, 3, 6, 2)
+X2 <- c(6, 5, 1, 4)
+mydata <- data.frame(ID, Time, X1, X2)
+mydata
+
+# melting
+md <- melt(mydata, id = c('ID', 'Time'))
+md
+
+# casting
+# newdata <- cast(md, fomula, FUN)
+# formula: rowvar1 + rowvar2 ... ~ colvar1 + colvar2 + ...
+
+# with aggregation
+
+cast(md, ID ~ variable, mean)
+cast(md, Time ~ variable, mean)
+
+# without aggragation
+
+cast(md, ID + Time ~ variable)
+
+cast(md, ID ~ Time) # only return the number of the variables
+
+cast(md, Time ~ variable) # the same with above code
+
+cast(md, ID + variable ~ Time)
+=======
 
 
 
@@ -458,6 +501,7 @@ aggdata <- aggregate(mtcars, by = list(cyl, gear),
 
 
 
+>>>>>>> 5053f3184f69a3ca47c3d93ba7e07f1bdec3a20d
 
 
 
