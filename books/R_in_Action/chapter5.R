@@ -439,6 +439,7 @@ options(digits=3)
 attach(mtcars)
 aggdata <- aggregate(mtcars, by = list(cyl, gear), 
                      FUN=mean, na.rm=TRUE)
+<<<<<<< HEAD
 aggdata
 
 aggdata_2 <- aggregate(mtcars, 
@@ -480,6 +481,25 @@ cast(md, ID ~ Time) # only return the number of the variables
 cast(md, Time ~ variable) # the same with above code
 
 cast(md, ID + variable ~ Time)
+=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> 5053f3184f69a3ca47c3d93ba7e07f1bdec3a20d
 
 
 
