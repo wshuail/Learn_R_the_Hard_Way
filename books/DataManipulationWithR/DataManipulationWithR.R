@@ -1,5 +1,12 @@
 
-# Data in R
+# chapter 1 Data in R
+
+# 1.1 Data in R
+# The most two important attributes of objects in R, 
+# mode and class
+# mode describes how the data is stored;
+# class tells generic functions like print how to handle it.
+# mode: numeric, character and logical, date and time, list
 
 mylist  = list(a = c(1, 2, 3), 
                b = c('cat', 'dog', 'duck'),
@@ -10,6 +17,8 @@ sapply(mylist[2], mode)
 
 sapply(mylist, class)
 
+# Data storage in R
+
 x <- c(1, 2, 5, 10)
 x
 mode(x)
@@ -18,25 +27,34 @@ class(x)
 y <- c(1, 2, 'cat', 3)
 y
 mode(y)
+class(y)
 
 z <- c(5, T, 3, 7)
 z
 mode(z)
+class(z)
+
+# any of the element is character, the other elements will be 
+# converted into character.
+# logical element combined with numerics will be converted into
+# numeric. TRUE will be 1 and FALSE will be 0.
 
 all <- c(x, y, z)
 all
 mode(all)
 class(x)
 
-h <- c(1, 2, one, two)
+h <- c(1, 2, 'one', 'two')
 mode(h)
 
-X1 <- c('one' = 1, 'two' = 2, 'three' = 3)
+# elements in vector can be assigned to names.
+x1 <- c('one' = 1, 'two' = 2, 'three' = 3)
 x1
 
 x2 <- c(1, 2, 3)
 x2
 
+# names
 names(x2) <- c('one','two', 'three')
 x2
 
@@ -51,18 +69,43 @@ nums + c(1, 2)
 c(1, 2) + nums
 nums + c(1, 2, 3)
 
-## matrix
+# all elements in array must be the same mode
+# the most commonly used array in R in matrix.
+# the imput will be comverted into matrix by row
+# names can be assigned to the rows and columns of the matrix
+# by dimname or row.names
+# the first list in dimnames is for row, and the second is for 
+# column.
+# use NULL if you want to only assign the row or column
 
+# don't assign the row
 rmat <- matrix(rnorm(15), nrow = 5, ncol = 3,
                dimnames = list(NULL, c('A', 'B', 'C')))
 rmat
 dimnames(rmat)
 
-rmat = matrix(rnorm(15), 3, 5, byrow = FALSE)
+# when the number of the rows is not equal to the columns,
+# byrow has no means.
+# 3 rows and 5 columns
+rmat <- matrix(rnorm(15), 3, 5)
+rmat
+# 3 rows
+rmat <- matrix(rnorm(15), 3, 5, byrow = FALSE)
+rmat
+rmat <- matrix(rnorm(15), 3, 5, byrow = TRUE)
 rmat
 
-## list
+rmat_2_list <- c(1, 2, 3, 4)
+rmat_2 <- matrix(rmat_2_list, 2)
+rmat_2
+rmat_3 <- matrix(rmat_2_list, 2, 2)
+rmat_3
+rmat_4 <- matrix(rmat_2_list, 2, 2, byrow = TRUE)
+rmat_4
 
+
+## list
+# the mode of object in the list in retained.
 mylist <- list(c(1, 4, 6), 'dog', 3,
                'cat', TRUE, c(9, 10, 11))
 mylist
@@ -74,20 +117,71 @@ mylist <- list(first = c(1, 3, 5),
 mylist
 names(mylist)
 
-## conversion of an object
+# the same result can be achived by names function
 
-nums <- c(rnorm(10), 5, 5)
+# a wrong example
+mylist_2 <- c(c(1, 3, 5), c('one', 'three', 'five'), c('end'))
+mylist_2
+
+# the right example
+mylist_3 <- list(c(1, 3, 5), c('one', 'three', 'five'), c('end'))
+mylist_3
+
+names(mylist_3) = c('first', 'second', 'third')
+mylist_3
+
+# data.frame
+# the mode of a data frame is a list, and its class is data frame
+
+# 1.3 Testing for modes and classes
+# is function
+
+# 1.4 Structure of R objests
+
+mylist_4 <- list(a = c(1, 2, 3), b = c('cat', 'dog', 'duck'),
+               d = factor('a', 'b', 'c'))
+# the summary function 
+summary(mylist_4)
+
+mylist_5 <- list(a = list(matrix(rnorm(10), 5, 2), val = 3),
+                 b = list(sample(letters, 10), values = runif(5)),
+                 c= list(list(1:10, 1:20), list(1:5, 1:10)))
+
+summary(mylist_5)
+
+# str function 
+str(mylist_5)
+
+## conversion of an object
+# as function
+
+nums <- c(12, 8, 12, 10, 12, 8, 10, 12)
 tt <- table(nums)
 tt
 names(tt)
+mode(tt)
+class(tt)
+
 sum(names(tt) * tt)
 sum(as.numeric(names(tt)) * tt)
 
+# the difference between list and as.list
+# the length is different
 x <- c(1, 3, 4, 5, 7)
 list(x)
 as.list(x)
 
-## Missing values
+## 1.6 Missing values
+# Working with missing  values
+# na.rm = TRUE
+# na.action = 
+# na.omit
+# complete.cases
+# na.strings
+
+
+# # ----------------------------------
+# chapter 2 Reading and wirting data
 
 ## sequences
 
