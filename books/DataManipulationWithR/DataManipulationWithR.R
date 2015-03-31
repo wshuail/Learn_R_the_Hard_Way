@@ -183,6 +183,41 @@ as.list(x)
 # # ----------------------------------
 # chapter 2 Reading and wirting data
 
+# 2.1 Reading vectors and matrics
+# scan
+names <- scan(what = '')
+Joe Fred Bob John
+Sam Sue
+Ted
+names
+
+names_2 <- scan(what = list(a = 0, b = '', c = 0))
+1 dog 3
+2 cat 5
+3 duck 7
+names_2
+
+# 2.2 Data frame: read.table
+# Passing the value FALSE can prevent any factor conversion
+# options(stringsAsFactors = FALSE)
+# the row.names can be used to assigned row names
+# row.names = NULL
+# na.strings
+# comment.char = 
+# dec
+# encoding = 
+# skip
+# nrows
+# fill = TRUE
+# count.fields
+# colClasses = 
+
+# 2.3 comma and tab delimited imput files
+# read.csv for comma
+# read.csv2 for semicolon
+# read.delim for tab delimited
+        
+
 ## sequences
 
 length(gl(3, 10))
