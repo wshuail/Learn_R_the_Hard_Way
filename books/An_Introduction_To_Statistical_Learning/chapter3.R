@@ -9,9 +9,9 @@ library(ISLR)
 fix(Boston)
 names(Boston)
 
-lm.fit <- lm(medv ~ lstat, data = Boston)
-lm.fit
-summary(lm.fit)
+lm_1 <- lm(medv ~ lstat, data = Boston)
+lm_1
+summary(lm_1)
 
 # medv = lstat * (-0.95005) + 34.55384
 # RSE: 6.22
@@ -19,23 +19,23 @@ summary(lm.fit)
 # F: 602
 # p-value: <2e-16
 
-names(lm.fit)
-coef(lm.fit)
-confint(lm.fit)
+names(lm_1)
+coef(lm_1)
+confint(lm_1)
 
 # the predict function
-predict_conf <- predict(lm.fit, data.frame(lstat = c(5, 10, 15)),
+predict_conf <- predict(lm_1, data.frame(lstat = c(5, 10, 15)),
                    interval = 'confidence')
 predict_conf
 
-predict_pred <- predict(lm.fit, data.frame(lstat = c(5, 10, 15)),
+predict_pred <- predict(lm_1, data.frame(lstat = c(5, 10, 15)),
                         interval = 'prediction')
 predict_pred
 
 plot(Boston$lstat, Boston$medv)
-abline(lm.fit)
-abline(lm.fit, lwd = 3)
-abline(lm.fit, lwd = 3, col = 'red')
+abline(lm_1)
+abline(lm_1, lwd = 3)
+abline(lm_1, lwd = 3, col = 'red')
 
 plot(Boston$lstat, Boston$medv, col = 'red')
 plot(Boston$lstat, Boston$medv, pch = 20)
@@ -45,52 +45,67 @@ plot(1:20, 1:20, pch = 20, col = 'red')
 
 # diagnostic plots
 par(mfrow = c(2, 2))
-plot(lm.fit)
+plot(lm_1)
 
-plot(predict(lm.fit), residuals(lm.fit))
-plot(predict(lm.fit), rstudent(lm.fit))
 
-plot(hatvalues(lm.fit))
-which.max(hatvalues(lm.fit))
+# residual function
+predict(lm_1)
+Boston$medv
+plot(Boston$medv, predict(lm_1))
+
+residuals(lm_1)
+plot(predict(lm_1), residuals(lm_1))
+plot(predict(lm_1), rstudent(lm_1))
+
+# Leverage statistic
+hatvalues(lm_1)
+plot(hatvalues(lm_1))
+which.max(hatvalues(lm_1))
 
 # Multiple Linear Regression
-lm.fit_2 <- lm(medv ~ lstat + age, data = Boston)
-summary(lm.fit_2)
+lm_2 <- lm(medv ~ lstat + age, data = Boston)
+summary(lm_2)
 
-lm.fit_3 <- lm(medv ~ ., data = Boston)
-summary(lm.fit_3)
-names(lm.fit_3)
+lm_3 <- lm(medv ~ ., data = Boston)
+summary(lm_3)
+names(lm_3)
 
-lm.fit_3$coefficients
-lm.fit_3$residuals
-lm.fit_3$effects
-lm.fit_3$rank
-lm.fit_3$fitted.values
-lm.fit_3$assign
-lm.fit_3$qr
-lm.fit_3$df.residual
-lm.fit_3$xlevels
-lm.fit_3$call
-lm.fit_3$terms
-lm.fit_3$model
+lm_3$coefficients
+lm_3$residuals
+lm_3$effects
+lm_3$rank
+lm_3$fitted.values
+lm_3$assign
+lm_3$qr
+lm_3$df.residual
+lm_3$xlevels
+lm_3$call
+lm_3$terms
+lm_3$model
+
+names(summary(lm_3))
+
+summary(lm_3)$residuals
 
 library(car)
-vif(lm.fit_3)
+vif(lm_3)
 
-lm.fit_4 <- lm(medv ~ .-age, data = Boston)
-summary(lm.fit_4)
+lm_4 <- lm(medv ~ .-age, data = Boston)
+summary(lm_4)
+
+lm_4 <- update(lm_4, ~.-age)
 
 # 3.6.4 Interaction terms
 
-lm.fit_5 <- lm(medv ~ lstat*age, data = Boston)
-summary(lm.fit_5)
+lm_5 <- lm(medv ~ lstat*age, data = Boston)
+summary(lm_5)
 
 # Non-Linear Transformations of the Predications
 
-lm.fit_6 <- lm(medv ~ lstat + I(lstat^2), data = Boston)
-summary(lm.fit_6)
-lm.fit_7 <- lm(medv ~ lstat, Boston)
-anova(lm.fit_7, lm.fit_6)
+lm_6 <- lm(medv ~ lstat + I(lstat^2), data = Boston)
+summary(lm_6)
+lm_7 <- lm(medv ~ lstat, Boston)
+anova(lm_7, lm_6)
 
 par(mfrow = c(2, 2))
 plot(lm.fit_6)
