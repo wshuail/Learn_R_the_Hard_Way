@@ -108,15 +108,15 @@ lm_7 <- lm(medv ~ lstat, Boston)
 anova(lm_7, lm_6)
 
 par(mfrow = c(2, 2))
-plot(lm.fit_6)
+plot(lm_6)
 
-lm.fit_8 <- lm(medv ~ poly(lstat, 5), Boston)
-summary(lm.fit_8)
+lm_8 <- lm(medv ~ poly(lstat, 5), Boston)
+summary(lm_8)
 
-lm.fit_9 <- lm(medv ~ log(rm), Boston)
-summary(lm.fit_9)
-lm.fit_10 <- lm(medv ~ rm, Boston)
-anova(lm.fit_9, lm.fit_10)
+lm_9 <- lm(medv ~ log(rm), Boston)
+summary(lm_9)
+lm_10 <- lm(medv ~ rm, Boston)
+anova(lm_9, lm_10)
 
 # 3.6.6 Quantitive Predictors
 head(Carseats)
