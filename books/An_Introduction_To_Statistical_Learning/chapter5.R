@@ -4,7 +4,7 @@
 # 5.3.1 The validation set approach
 
 library(ISLR)
-set.seed(1733)
+set.seed(1)
 dim(Auto)
 train <- sample(392, 196)
 length(train)
@@ -12,7 +12,9 @@ lm_1 <- lm(mpg ~ horsepower, data = Auto, subset = train)
 lm_prob <- predict(lm_1, Auto)
 
 mean_1 <- mean((Auto$mpg - lm_prob)[-train]^2)
+mean_1
 
+# the polynomial and cubic regression
 lm_2 <- lm(mpg ~ poly(horsepower, 2), data = Auto, subset = train)
 lm_2_prob <- predict(lm_2, Auto)
 mean_2 <- mean((Auto$mpg - lm_2_prob)[-train]^2)
@@ -22,6 +24,25 @@ lm_3 <- lm(mpg ~ poly(horsepower, 3), data = Auto, subset = train)
 lm_3_prob <- predict(lm_3, Auto)
 mean_3 <- mean((Auto$mpg - lm_3_prob)[-train]^2)
 mean_3
+
+# choose data again
+set.seed(2)
+train <- sample(392, 196)
+lm_again <- lm(mpg ~ horsepower, data = Auto, subset = train)
+lm_again_pred <- predict(lm_again, Auto)
+mean((Auto$mpg - lm_again_pred)[-train]^2)
+
+lm_again_2 <- lm(mpg ~ poly(horsepower, 2), data = Auto, 
+               subset = train)
+lm_again_pred_2 <- predict(lm_again_2, Auto)
+mean((Auto$mpg - lm_again_pred_2)[-train]^2)
+
+
+lm_again_3 <- lm(mpg ~ poly(horsepower, 3), data = Auto, 
+                 subset = train)
+lm_again_pred_3 <- predict(lm_again_3, Auto)
+mean((Auto$mpg - lm_again_pred_3)[-train]^2)
+
 
 # 5.3.2 Leave-One-Out Cross-Validation
 
@@ -34,6 +55,7 @@ coef(lm_1)
 library(boot)
 cv_err <- cv.glm(Auto, glm_1)
 summary(cv_err)
+names(cv_err)
 cv_err$call
 cv_err$K
 cv_err$delta
@@ -47,19 +69,32 @@ for (i in 1:10){
      cv_error[i] <- cv.glm(Auto, glm)$delta[1]
 }
 cv_error
+class(cv_error)
+plot(1:10, cv_error, type = 'b')
+
 
 # K-fold cross-validation
-set.seed(11)
+set.seed(17)
 cv_error_k10 <- c()
 for (i in 1:10){
      glm <- glm(mpg ~ poly(horsepower, i), data = Auto)
      cv_error_k10[i] <- cv.glm(Auto, glm, K = 10)$delta[1]
 }
 cv_error_k10
+plot(cv_error_k10, type = 'b', col = 2)
+
+cv_error_k10_2 <- c()
+for (i in 1:10){
+        glm <- glm(mpg ~ poly(horsepower, i), data = Auto)
+        cv_error_k10_2[i] <- cv.glm(Auto, glm, K = 10)$delta[2]
+}
+cv_error_k10_2
+plot(cv_error_k10_2, type = 'b', col = 2)
 
 # The Bootstrap
 # Estimating the accuracy of a statistic of interest
 
+set.seed(1)
 alpha <- function(data, index){
      X = data$X[index]
      Y = data$Y[index]
@@ -95,7 +130,7 @@ boot_func <- function(data, index){
                              data = data, subset = index)))
 }
 
-set.seed(13)
+set.seed(1)
 boot(Auto, boot_func, 1000)
 
 summary(lm(mpg ~ poly(horsepower, 2), Auto))$coef
