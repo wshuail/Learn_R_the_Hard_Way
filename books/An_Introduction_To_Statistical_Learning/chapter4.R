@@ -13,14 +13,20 @@ plot(Smarket$Volume)
 
 # 4.6.2 Logistic Regression
 # The glm() function returns a generalized linear model
+# famaly = binomial
 glm_1 <- glm(Direction ~ Lag1 + Lag2 + Lag3 + Lag4 + Lag5 + 
                   Volume, data = Smarket, family = binomial)
 summary(glm_1)
 names(glm_1)
-summary(glm_1$coef)
 
+names(summary(glm_1))
+summary(glm_1$coef)
 coef(glm_1)
 
+summary(glm_1)$coef
+
+
+# To predict the result
 contrasts(Smarket$Direction)
 glm_2 <- predict(glm_1, type = 'response')
 glm_2[1:10]
@@ -29,10 +35,12 @@ glm_3 <- rep('Down', 1250)
 glm_3[glm_2 > 0.5] = 'Up'
 glm_3[1:10]
 
+# confusion matrix
 table(glm_3, Smarket$Direction)
 (145 + 507)/1250
 mean(glm_3 == Smarket$Direction)
 
+# Create a subset of the data
 train <- (Smarket$Year < 2005)
 class(train)
 length(train)
@@ -64,8 +72,10 @@ glm_7_re[glm_7_pre > 0.5] = 'Up'
 glm_7_re
 Direction_2005
 table(glm_7_re, Direction_2005)
-
+(35 + 106)/252
 mean(glm_7_re == Direction_2005)
+
+106/(106 + 76)
 
 glm_7_set <- predict(glm_7, 
                      newdata = data.frame(Lag1 = c(1.2, 1.5),
@@ -79,11 +89,15 @@ lda <- lda(Direction ~ Lag1 + Lag2, data = Smarket,
            subset = train)
 lda
 
+par('mar')
+par(mar = c(2.5, 2.5, 1.5, 1))
+
 plot(lda)
 lda_pred <- predict(lda, Smarket_2005)
 names(lda_pred)
 
 lda_class <- lda_pred$class
+lda_class
 lda_pred$posterior
 lda_pred$x
 
@@ -96,6 +110,7 @@ sum(lda_pred$posterior[, 1] < 0.5)
 lda_pred$posterior[1:20, 1]
 lda_class[1:20]
 
+sum(lda_pred$posterior[, 1] > 0.9)
 
 # 4.6.4 Quadratic Discriminant Analysis
 
@@ -177,7 +192,7 @@ knn_pred_k7 <- knn(train.X, test.X, train.Y, k = 7)
 table(knn_pred_k7, test.Y)
 2/(5 + 2)
 
-
+# Linear regression model
 glm <- glm(Purchase ~ ., data = Caravan, family = binomial,
            subset = -test)
 
