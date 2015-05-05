@@ -35,6 +35,10 @@ fit3 <- lm(weight ~ height + I(height^2) + I(height^3),
            data = women)
 
 summary(fit3)
+plot(women$height, women$weight,
+     xlab = 'Height (in inches)',
+     ylab = 'Weight(in pounds)')
+lines(women$height, fitted(fit3))
 
 
 ?install.packages
@@ -84,9 +88,15 @@ library(effects)
 
 # plot(effect(term, mod, xlevels), multiline = TRUE)
 
-plot(Effect('hp:wt', 
+effect_1 <- effect('hp:wt', fit5)
+plot(effect_1)
+
+effect_2 <- effect('hp:wt', fit5, xlevels = list(wt = c(2.2, 3.2, 4.2)))
+plot(effect_2, multiline = T)
+
+plot(effect('hp:wt', 
             fit5, 
-            list(wt = c(2.2, 3.2, 4.2))), 
+            xlevels = list(wt = c(2.2, 3.2, 4.2))), 
      multiline = TRUE)
 
 ?effect
@@ -105,13 +115,15 @@ confint(fit6)
 fit7 <- lm(weight ~ height, data = women)
 par(mfrow= c(2, 2))
 plot(fit7)
+crPlots(fit7)
 
 fit8 <- lm(weight ~ height + I(height^2), data = women)
 par(mfrow = c(2,2))
 plot(fit8)
+crPlots(fit8)
 
 
-# delete point 12 and 15
+# delete point 13 and 15
 fit9 <- lm(weight ~ height + I(height^2), 
            data = women[-c(13, 15), ])
 par(mfrow = c(2,2))
@@ -129,6 +141,8 @@ plot(fit10)
 library(car)
 fit11 <- lm(Murder ~ Population + Illiteracy + Income + Frost,
             data = states)
+qqPlot(fit11, id.method = 'identify')
+
 qqPlot(fit11, labels = row.names(states), 
        id.method = 'identify',
        simulate = TRUE,
@@ -138,6 +152,12 @@ states['Nevada', ]
 fitted(fit11)['Nevada']
 residuals(fit11)['Nevada']
 rstudent(fit11)['Nevada']
+
+# residplot function
+
+r_fit11 <- rstudent(fit11)
+r_fit11
+hist(r_fit11)
 
 residplot <- function(fit, nbreaks = 10){
      z <- rstudent(fit)
@@ -167,11 +187,17 @@ residplot <- function(fit, nbreaks = 10){
 }
 residplot(fit11)
 
+# Inderpendence of error
+
 durbinWatsonTest(fit11)
 
+# Linearity
 crPlots(fit11)
 
+# Homoscedasticity
 ncvTest(fit11)
+
+ncvTest(fit8)
 
 spreadLevelPlot(fit11)
 
@@ -192,18 +218,11 @@ sqrt(vif(fit11)) > 2
 
 # 8.4.1 outliers
 
-install.packages('car')
-library(car)
+outlierTest(fit11)
 
-states <- as.data.frame(state.x77[, c('Murder', 'Population',
-                                      'Illiteracy', 'Income',
-                                      'Frost')])
-head(states)
+# 8.4.2 High leverage points
 
-fit <- lm(Murder ~ Population + Illiteracy + Income + Frost,
-          data  = states)
-
-outlierTest(fit)
+plot(hatvalues(fit11))
 
 hat.plot <- function(x){
      p <- length(coefficients(x))
@@ -219,13 +238,16 @@ hat.plot(fit)
 
 # 8.4.3 influential observation
 
-cutoff <- 4/(nrow(states) - length(fit$coefficients) - 2)
-plot(fit, which = 4, cook.values = cutoff)
+fit11$coefficients
+
+cutoff <- 4/(nrow(states) - length(fit11$coefficients) - 2)
+plot(fit11, which = 4, cook.values = cutoff)
 abline(h = cutoff, lty = 2, col = 'red')
 
-avPlots(fit, ask = F, onepage = T, id.method = 'identify')
+# added variable plot
+avPlots(fit11, ask = F, onepage = T, id.method = 'identify')
 
-influencePlot(fit, id.method = 'identify',
+influencePlot(fit11, id.method = 'identify',
               main = 'Influence Plot',
               sub = 'Circle size is proportional to Cook\'s distance')
 
@@ -271,7 +293,7 @@ library(MASS)
 fit16 <- lm(Murder ~ Population + Illiteracy + Income + Frost,
             data = states)
 stepAIC(fit16)
-
+stepAIC(fit16, direction = 'backward')
 # all subset regression
 
 install.packages('leaps')
@@ -379,21 +401,4 @@ rownames(import) <- lbls
 relweights(fit20, col = 'lightgrey')
 
 # 8.8 summary
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
