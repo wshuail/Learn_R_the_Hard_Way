@@ -39,6 +39,12 @@ head(cholesterol)
 table(trt)
 aggregate(response, by = list(trt), FUN = mean)
 
+library(magrittr)
+library(dplyr)
+cholesterol %>%
+     group_by(trt) %>%
+     summarise(mean(response))
+
 aggregate(response, by = list(trt), FUN = sd)
 
 fit <- aov(response ~ trt)
