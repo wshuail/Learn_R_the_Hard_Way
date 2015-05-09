@@ -11,6 +11,7 @@ expand(mtcars, cyl, mpg = seq_range(mpg, 5))
 seq_range(1:100, 5)
 
 df <- data.frame(a = c(1, 2, 5), b = c(3, 5, 3), c = c(1, 2, 3))
+df
 expand(df)
 expand(df, a, b)
 expand(df, a, c)
@@ -66,9 +67,12 @@ stocks %>% gather(stock, price, -time)
 
 head(mtcars)
 mtcars_1 <- mtcars %>% gather(mtcars, vs, -am)
-mtcars_2 <- melt(mtcars, id = 'am')
-identical(mtcars_1, mtcars_2)
+mtcars_1
 
+library(reshape2)
+mtcars_2 <- melt(mtcars, id = 'am')
+mtcars_2
+identical(mtcars_1, mtcars_2)
 
 # Sometimes two variables are clumped together in one column. 
 # separate() allows you to tease them apart (extract() works 
@@ -91,8 +95,11 @@ messy
 
 tidier <- messy %>% gather(key, time, -id, -trt)
 tidier
+tidier_2 <- messy %>% gather(key, time, work.T1:home.T2)
+tidier_2
+identical(tidier_2, tidier)
 
-tidy <- tidier %>% separate(variable, 
+tidy <- tidier %>% separate(key, 
                             into = c('location', 'time'),
                             sep = '\\.')
 tidy %>% head(8)
@@ -105,6 +112,7 @@ df %>% separate(x, c("A", "B"))
 # If every row doesn't split into the same number of pieces, use
 # the extra argument to control what happens
 df <- data.frame(x = c("a", "a b", "a b c", NA))
+df
 df %>% separate(x, c("a", "b"), extra = "merge")
 df %>% separate(x, c("a", "b"), extra = "drop")
 # If only want to split specified number of times use 

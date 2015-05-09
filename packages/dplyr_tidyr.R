@@ -39,7 +39,7 @@ Qtr.3 <- rnorm(12, mean = 25, sd = 6)
 Qtr.4 <- rnorm(12, mean = 20, sd = 10)
 
 DF <- data.frame(Group, Year, Qtr.1, Qtr.2, Qtr.3, Qtr.4)
-
+DF
 # How to use the gather function
 # create a new variale called Quarter, converted value of Qtr.1
 # to Qtr.2 as a new variable

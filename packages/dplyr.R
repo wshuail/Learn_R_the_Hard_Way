@@ -2,9 +2,6 @@
 
 
 library(dplyr)
-getwd()
-ls()
-list.files()
 require(hflights)
 
 # transform hflights data for further analysis
@@ -12,6 +9,7 @@ head(hflights)
 ?tbl_df
 hflights_df <- tbl_df(hflights)
 head(hflights_df)
+
 
 # select
 
