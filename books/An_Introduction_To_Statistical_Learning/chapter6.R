@@ -9,7 +9,6 @@ sum(is.na(Hitters))
 hitters <- na.omit(Hitters)
 str(hitters)
 
-install.packages('leaps')
 library(leaps)
 regfit_full <- regsubsets(Salary ~ ., hitters)
 summary(regfit_full)
@@ -55,17 +54,20 @@ coef(regfit_full_2, 7)
 coef(regfit_forward, 7)
 coef(regfit_forward, 7)
 
-# Choosing among models using the validation set approach and
-# Cross-validation
+# 6.5.3 Choosing among models using the validation set 
+# approach and Cross-validation
 
 set.seed(1)
 train <- sample(c(TRUE, FALSE), nrow(hitters), rep = T)
+train
 test <- (!train)
 
 regfit_best <- regsubsets(Salary ~ ., data = hitters[train, ],
                           nvmax = 19)
 
 test_matrix <- model.matrix(Salary ~ ., data = hitters[test, ])
+class(test_matrix)
+test_matrix
 
 val_error <- c()
 for (i in 1:19){
@@ -85,19 +87,20 @@ predict_regsubsets <- function(object, newdata, id, ...){
      matrix[, xvars] %*% coefi
 }
 
-
+# apply to the full data set
 regfit_best_2 <- regsubsets(Salary ~ ., data = hitters, 
                             nvmax = 19)
 coef(regfit_best_2, 10)
 
 k = 10
-set.seed(2)
+set.seed(1)
 folds <- sample(1: k, nrow(hitters), replace = T)
 folds[1:30]
 cv_errors <- matrix(NA, k, 19,
                     dimnames = list(NULL, paste(1: 19)))
+cv_errors
 
-for (i in 1:k){
+for (j in 1:k){
      best_fit <- regsubsets(Salary ~ ., 
                             data = hitters[folds != j, ],
                             nvmax = 19)
@@ -112,8 +115,11 @@ for (i in 1:k){
 cv_errors
 
 # Lab 2: Ridge Regression and the Lasso
-install.packages('glmnet')
+
 library(glmnet)
+
+head(hitters)
+dim(hitters)
 
 x <- model.matrix(Salary ~ ., hitters)[, -1]
 y <- hitters$Salary
@@ -126,41 +132,75 @@ grid <- 10^seq(10, -2, length = 100)
 grid
 ridge_model <- glmnet(x, y, alpha = 0, lambda = grid)
 dim(coef(ridge_model))
+ridge_model
 
+ridge_model$lambda
 ridge_model$lambda[50]
 coef(ridge_model)[, 50]
-sqrt(sum(coef(ridge_model)[-1, 50]^2))
+length(coef(ridge_model)[, 50])
 
+coef(ridge_model)[-1, 50]
+length(coef(ridge_model)[-1, 50])
+
+sqrt(sum(coef(ridge_model)[-1, 50]^2))
 
 ridge_model$lambda[60]
 coef(ridge_model)[, 60]
 sqrt(sum(coef(ridge_model)[-1, 60]^2))
 
+predict(ridge_model, s = 50, type = 'coefficients')
 predict(ridge_model, s = 50, type = 'coefficients')[1:20, ]
 
-set.seed(14)
+set.seed(1)
 train <- sample(1: nrow(x), nrow(x)/2)
 test <- (-train)
 y_test <- y[test]
 
 ridge_model_2 <- glmnet(x[train, ], y[train], alpha = 0, 
                         lambda = grid, thresh = 1e-12)
-ridge_2_pred <- predict(ridge_model_2, s = 4, newx = x[test, 1])
-?predict
+ridge_2_pred <- predict(ridge_model_2, s = 4, 
+                        newx = x[test, ])
+mean((ridge_2_pred - y_test)^2)
+
+mean((mean(y[train]) - y_test)^2)
+
+ridge_3_pred <- predict(ridge_model_2, s = 1e10, 
+                        newx = x[test, ])
+mean((ridge_3_pred - y_test)^2)
+
+ridge_4_pred <- predict(ridge_model_2, s = 0,
+                        newx = x[test, ], exact = T)
+mean((ridge_4_pred - y_test)^2)
+lm(y ~ x, subset = train)
+
+# use cross validation by cv.glmnet()
+set.seed(1)
+cv_ridge <- cv.glmnet(x[train, ], y[train], alpha = 0)
+plot(cv_ridge)
+bestlm <- cv_ridge$lambda.min
+bestlm
+
+ridge_5_pred <- predict(ridge_model_2, s = bestlm,
+                        newx = x[test, ])
+mean((ridge_5_pred - y_test)^2)
+
+out <- glmnet(x, y, alpha = 0)
+predict(out, type = 'coefficients', s = bestlm)
 
 
 # 6.6.2 The Lasso
 lasso_model <- glmnet(x[train, ], y[train], alpha = 1)
 plot(lasso_model)
 
-set.seed(7283)
-cv_out <- cv.glmnet(x[train, ], y[train], alpha = 1)
-plot(cv_out)
+set.seed(1)
+cv_lasso <- cv.glmnet(x[train, ], y[train], alpha = 1)
+plot(cv_lasso)
 
-bestlam <- cv_out$lambda.min
+bestlam <- cv_lasso$lambda.min
 bestlam
 
-lasso_pred <- predict(lasso_model, s = bestlam, newx = x[test, ])
+lasso_pred <- predict(lasso_model, s = bestlam, 
+                      newx = x[test, ])
 mean((lasso_pred - y_test)^2)
 
 out <- glmnet(x, y, alpha = 1, lambda = grid)
@@ -172,16 +212,17 @@ lasso_coef[lasso_coef != 0]
 # 6.7 Lab 3
 # PCR and PLS Regression
 # 6.7.1 Principal Components Regression
-install.packages('pls')
+
 library(pls)
-set.seed(2635)
+set.seed(2)
 pcr <- pcr(Salary ~ ., data = hitters, scale = T,
            validation = 'CV')
 summary(pcr)
 
+validationplot(pcr)
 validationplot(pcr, val.type = 'MSEP')
 
-set.seed(63)
+set.seed(1)
 pcr_2 <- pcr(Salary ~ ., data = hitters, subset = train,
              scale = T, validation = 'CV')
 validationplot(pcr_2, vil.type = 'MSEP')
@@ -194,7 +235,7 @@ summary(pcr_3)
 
 # 6.7.2 Partial Least Squares
 
-set.seed(367)
+set.seed(1)
 pls <- plsr(Salary ~ ., data = hitters, subset = train,
             scale = T, validation = 'CV')
 summary(pls)
@@ -206,7 +247,7 @@ mean((pls_pred - y_test)^2)
 
 pls_full <- plsr(Salary ~., data = hitters, scale = T,
                  ncomp = 2)
-summary(pls_full
+summary(pls_full)
 
 
 
