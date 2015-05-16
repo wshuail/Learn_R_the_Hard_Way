@@ -2,6 +2,7 @@
 # 8.3 Applied Decision Tree
 # 8.3.1 Fitting Classfication trees
 library(tree)
+library(ISLR)
 carseats <- Carseats
 high <- ifelse(carseats$Sales <= 8, 'No', 'Yes')
 head(carseats)
@@ -11,12 +12,13 @@ carseats <- data.frame(carseats, high)
 tree <- tree(high ~ . - Sales, carseats)
 summary(tree)
 plot(tree)
+text(tree)
 text(tree, pretty = 0)
 tree
 
 # test error
 # split the data
-set.seed(138)
+set.seed(2)
 train <- sample(1:nrow(carseats), 200)
 carseats_train <- carseats[train, ]
 carseats_test <- carseats[-train, ]
@@ -26,10 +28,10 @@ high_test <- high[-train]
 tree_2 <- tree(high ~ . -Sales, data = carseats, subset = train)
 tree_pred <- predict(tree_2, carseats_test, type = 'class')
 table(tree_pred, high_test)
-(90 + 60)/200
+(86 + 57)/200
 
 # cross validation
-set.seed(135)
+set.seed(3)
 cv_tree <- cv.tree(tree_2, FUN = prune.misclass)
 names(cv_tree)
 cv_tree
@@ -48,7 +50,7 @@ text(prune, pretty = 0)
 # how well does this function perform
 tree_pred_2 <- predict(prune, carseats_test, type = 'class')
 table(tree_pred_2, high_test)
-(86 + 63)/200
+(94 + 60)/200
 
 # increase the values of the best
 prune_2 <- prune.misclass(tree_2, best = 15)
@@ -57,13 +59,13 @@ text(prune_2, pretty = 0)
 
 tree_pred_3 <- predict(prune, carseats_test, type = 'class')
 table(tree_pred_3, high_test)
-(86 + 63)/200
+(94 + 60)/200
 
 # 8.3.2 Fitting Regression Trees
 
 # load the Boston data set
 library(MASS)
-set.seed(536)
+set.seed(1)
 train <- sample(1: nrow(Boston), nrow(Boston)/2)
 
 tree_boston <- tree(medv ~ ., Boston, subset = train)
@@ -88,6 +90,7 @@ text(prune_boston, best = 0)
 # make predication
 boston_pred <- predict(tree_boston, newdata = Boston[-train, ])
 boston_test <- Boston$medv[-train]
+boston_test
 plot(boston_pred, boston_test)
 abline(0, 1)
 mean((boston_pred - boston_test)^2)
@@ -96,7 +99,9 @@ mean((boston_pred - boston_test)^2)
 library(randomForest)
 
 # bagging
-set.seed(26)
+set.seed(1)
+head(Boston)
+str(Boston)
 bag_boston <- randomForest(medv ~ ., data = Boston, 
                            subset = train, mtry = 13,
                            importance = T)
@@ -115,8 +120,8 @@ bag_pred_2 <- predict(bag_boston_2, newdata = Boston[-train, ])
 bag_boston_2
 mean((bag_pred_2 - Boston$medv[-train])^2)
 
-# forest random method
-set.seed(675)
+# Random forest method
+set.seed(1)
 forest_boston <- randomForest(medv ~ ., data = Boston, 
                               subset = train, mtry = 6,
                               importance = T)
@@ -131,7 +136,7 @@ varImpPlot(forest_boston)
 
 # 8.3.4 Boosting
 library(gbm)
-set.seed(7654)
+set.seed(1)
 boost_boston <- gbm(medv ~ ., data = Boston[train, ],
                     distribution = 'gaussian', 
                     n.trees = 5000, interaction.depth = 4)
@@ -154,9 +159,4 @@ boost_boston_2 <- gbm(medv ~ ., data = Boston[train, ],
 boost_boston_pred_2 <- predict(boost_boston_2, Boston[-train, ],
                              n.trees = 5000)
 mean((boost_boston_pred_2 - Boston$medv[-train])^2)
-
-
-
-
-
 
