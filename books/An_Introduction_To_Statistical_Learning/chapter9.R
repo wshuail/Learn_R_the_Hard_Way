@@ -5,8 +5,11 @@ library(e1071)
 # 9.6.1 support vectors classifier
 set.seed(1)
 x <- matrix(rnorm(20*2), ncol = 2)
+x
 y <- c(rep(-1, 10), rep(1, 10))
+y
 x[y == 1, ] = x[y == 1, ] + 1
+x
 
 # check the linear condition
 plot(x, col = (3 - y))
@@ -20,6 +23,7 @@ svm <- svm(y ~ ., data = df, kernel = 'linear', cost = 10,
            scale = F)
 svm
 plot(svm, df)
+
 names(svm)
 svm$index
 summary(svm)
@@ -32,7 +36,7 @@ summary(svm_2)
 svm_2$index
 
 # use the tune function for cross validation
-set.seed(27)
+set.seed(1)
 tune <- tune(svm, y ~ ., data = df, kernel = 'linear',
              ranges = list(cost = c(0.001, 0.01, 0.1, 1, 5, 10, 100)))
 # an error occured, clean the workspace and restart the R
@@ -73,7 +77,7 @@ plot(svm_4, df_3)
 
 # 9.6.2 Support vector machine
 # set the data
-set.seed(26)
+set.seed(1)
 x = matrix(rnorm(200*2), ncol = 2)
 x[1: 100, ] = x[1:100, ] + 2
 x[101: 150, ] = x[101: 150, ] + 2
@@ -96,7 +100,7 @@ summary(svm_2)
 plot(svm_2, df[train, ])
 
 # use tune to choose best model by cross validation
-
+set.seed(1)
 tune <- tune(svm, y ~ ., data = df[train, ], kernel = 'radial',
              ranges = list(cost = c(0.1, 1, 10, 100, 1000)),
              gamma = c(0.5, 1, 2, 3, 4))
@@ -125,8 +129,13 @@ fit <- attributes(predict_2)$decision.values
 par(mfrow = c(1, 2))
 rocplot(fit, df[train, 'y'], main = 'Training Data')
 
+svm_3 <- svm(y ~ ., data = df[train, ], kernel = 'radial',
+             gamma = 50, cost = 1, decision.values = T)
+predict_3 <- predict(svm_3, df[train, ], decision.values = T)
+fit <- attributes(predict_3)$decision.values
+
 # 9.6.4 SVM with multiple classes
-set.seed(654)
+set.seed(1)
 x <- rbind(x, matrix(rnorm(50*2), ncol = 2))
 y <- c(y, rep(0, 50))
 x[y == 0, 2] = x[y == 0, 2] + 2
