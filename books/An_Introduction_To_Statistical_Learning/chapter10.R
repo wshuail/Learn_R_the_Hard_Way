@@ -39,6 +39,9 @@ pve
 plot(pve, type = 'b')
 plot(cumsum(pve), type = 'b')
 
+a = c(1, 2, 8, -3)
+cumsum(a)
+
 # 10.5 Lab 2: Clusting
 # 10.5.1 K-Means Clusting
 
@@ -57,17 +60,18 @@ plot(x, col = (km$cluster + 1), main = 'K-Means Clustering',
      pch = 20, cex = 2)
 
 # K = 3
-set.seed(6)
+set.seed(4)
 km_k3 <- kmeans(x, 3, nstart = 20)
 plot(x, col = (km_k3$cluster + 1), pch = 20, cex = 1.5)
 
 # nstart was used to set the initial clusters
-set.seed(7)
+set.seed(3)
 km_2 <- kmeans(x, 3, nstart = 1)
 km_2$tot.withinss
 
 km_3 <- kmeans(x, 3, nstart = 50)
 km_3$tot.withinss
+
 # a larger nstart is better
 
 # 10.5.2 Hierachical clustering
