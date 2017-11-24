@@ -48,7 +48,7 @@ library(car)
 scatterplot(weight ~ height,
             data = women,
             spread = F,
-            lty.smooth = 2,
+            lty = 2,
             pch = 19,
             main = 'Women Age 30-39',
             xlab = 'Height (in inches)',
@@ -68,7 +68,7 @@ cor(states)
 
 library(car)
 scatterplotMatrix(states, spread = F,
-                  lty.smooth = 2,
+                  lty = 2,
                   main = 'Scatter plot matrix')
 
 fit <- lm(Murder ~ Population + Illiteracy + Income + Frost,
